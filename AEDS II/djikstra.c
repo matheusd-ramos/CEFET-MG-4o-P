@@ -71,12 +71,6 @@ int main() {
             break;
         }
 
-        // Verifica se ainda cabe em memória
-        if ((long long)n * n > 200000000) {
-            printf("Grafo com %d vertices excede memoria (~200MB). Encerrando testes.\n", n);
-            break;
-        }
-
         // Aloca e gera grafo completo com pesos aleatórios > 0
         int **grafo = malloc(n * sizeof(int *));
         for (int i = 0; i < n; i++) {
@@ -92,7 +86,11 @@ int main() {
         dijkstra(grafo, n, 0);
 
         double tempo = difftime(time(NULL), inicio);
+
+        // Printa na tela
         printf("Vertices: %d | Comparacoes: %lld | Tempo: %.2f s\n", n, comparacoes, tempo);
+
+        // Salva num arquivo csv
         fprintf(saida, "%d;%lld;%.2f\n", n, comparacoes, tempo);
 
         // Libera memória
