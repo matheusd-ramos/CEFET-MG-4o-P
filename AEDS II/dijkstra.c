@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define TEMPO_LIMITE 1800 // 30 minutos em segundos
+#define TEMPO_LIMITE 3600 // 30 minutos em segundos
 
 long long int comparacoes = 0;
 
@@ -54,7 +54,7 @@ void dijkstra(int **grafo, int n, int origem) {
 
 int main() {
     srand(time(NULL));
-    time_t inicioGeral = time(NULL);
+    clock_t inicioGeral = clock();
 
     FILE *saida = fopen("resultados.csv", "w");
     if (!saida) {
@@ -65,7 +65,7 @@ int main() {
     fprintf(saida, "Vertices,Comparacoes,Tempo(seg)\n");
 
     for (int n = 4; n <= 1000000; n++) {
-        double tempoDecorrido = difftime(time(NULL), inicioGeral);
+        double tempoDecorrido = (double) (clock() - inicioGeral)/CLOCKS_PER_SEC;
         if (tempoDecorrido > TEMPO_LIMITE) {
             printf("\nTempo total de 30 minutos atingido. Encerrando testes.\n");
             break;
@@ -81,14 +81,15 @@ int main() {
         }
 
         comparacoes = 0;
-        time_t inicio = time(NULL);
+        clock_t inicio = clock();
 
         dijkstra(grafo, n, 0);
 
-        double tempo = difftime(time(NULL), inicio);
+        double tempo = (double) (clock() - inicio)/CLOCKS_PER_SEC;
+
 
         // Printa na tela
-        printf("Vertices: %d | Comparacoes: %lld | Tempo: %.2f s\n", n, comparacoes, tempo);
+        printf("Vertices: %d | Comparacoes: %lld | Tempo de pesquisa: %.2f s | Tempo Total: %.2f s\n", n, comparacoes, tempo, tempoDecorrido);
 
         // Salva num arquivo csv
         fprintf(saida, "%d;%lld;%.2f\n", n, comparacoes, tempo);
